@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <!-- namespace 属性执行映射到 XmlMapper接口 -->
+<mapper namespace="com.example.sqltest.mapper.TestMapper">
+
+    <select id="findName" resultType="java.lang.String">
+        select username from user where id=1
+    </select>
+
+    <select id="findBasicInformation" resultType="com.example.sqltest.vo.Test">
+        select username,sex,phone from user where id=1
+    </select>
+
+    <update id="updatename" parameterType="com.example.sqltest.vo.Test">
+        update user
+        set
+        <if test="username != null">
+            username = #{username},
+        </if>
+        <if test="sex != null">
+            sex = #{sex},
+        </if>
+        <if test="phone != null">
+            phone = #{phone}
+        </if>
+        where id = 1
+    </update>
+
+    <delete id="deletename">
+        delete from user
+        where username in(
+        <foreach collection="list" item="item" separator=",">
+            #{item.username}
+        </foreach>)
+    </delete>
+
+    <insert id="insertname" parameterType="com.example.sqltest.vo.Test">
+        insert into user(id,username,sex,phone) values(#{id},#{username},#{sex},#{phone})
+    </insert>
+
+    <insert id="foreachinsert" parameterType="java.util.List">
+        insert into user
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+            #{item.id},
+            #{item.username},
+            #{item.sex},
+            #{item.phone}
+        )
+        </foreach>
+    </insert>
+</mapper>
